@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LibTL Telegram WebApp</title>
+  <title>Telegram Reward WebApp</title>
 
-  <!-- Telegram Mini App API -->
+  <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <!-- LibTL SDK -->
@@ -46,32 +46,38 @@
     }
   </style>
 </head>
-<body onload="updateUI()">
+<body>
 
-  <h1>🎁 Earn Rewards</h1>
+  <h1>🎁 Earn Coins</h1>
 
   <div class="coin-box">
     💰 Coins: <span id="coins">0</span>
   </div>
 
-  <!-- Ad Buttons -->
-  <button onclick="showRewarded()">🎬 Watch Rewarded Ad</button>
-  <button onclick="showPopup()">⚡ Claim via Popup</button>
-  <button onclick="startInAppAds()">📢 Start Auto Ads</button>
+  <button onclick="showRewarded()">🎬 Watch Ad (10 Coins)</button>
+  <button onclick="showPopup()">⚡ Quick Claim (5 Coins)</button>
+  <button onclick="startInAppAds()">📢 Enable Auto Ads</button>
 
   <script>
-    // Telegram WebApp ready check
     const tg = window.Telegram.WebApp;
-    tg.ready();
+
+    // Expand to full screen
+    tg.expand();
+
+    // Theme change support
+    tg.onEvent('themeChanged', () => {
+      document.body.style.backgroundColor = tg.themeParams.bg_color || '#0e0e0e';
+      document.body.style.color = tg.themeParams.text_color || '#ffffff';
+    });
+
+    function updateUI() {
+      document.getElementById("coins").innerText = localStorage.getItem("coins") || "0";
+    }
 
     function addReward(points) {
       let current = parseInt(localStorage.getItem("coins") || "0");
       localStorage.setItem("coins", current + points);
       updateUI();
-    }
-
-    function updateUI() {
-      document.getElementById("coins").innerText = localStorage.getItem("coins") || "0";
     }
 
     function showRewarded() {
@@ -98,7 +104,9 @@
         }
       });
     }
-  </script>
 
+    // Initialize UI on load
+    window.onload = updateUI;
+  </script>
 </body>
 </html>
