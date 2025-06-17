@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LibTL Telegram WebApp</title>
+
+  <!-- Telegram Mini App API -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- LibTL SDK -->
+  <script src='//libtl.com/sdk.js' data-zone='9153061' data-sdk='show_9153061'></script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: var(--tg-theme-bg-color, #0e0e0e);
+      color: var(--tg-theme-text-color, #ffffff);
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .coin-box {
+      font-size: 18px;
+      margin: 20px 0;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 10px auto;
+      padding: 14px;
+      font-size: 16px;
+      background-color: var(--tg-theme-button-color, #00f5ff);
+      color: var(--tg-theme-button-text-color, #000);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body onload="updateUI()">
+
+  <h1>🎁 Earn Rewards</h1>
+
+  <div class="coin-box">
+    💰 Coins: <span id="coins">0</span>
+  </div>
+
+  <!-- Ad Buttons -->
+  <button onclick="showRewarded()">🎬 Watch Rewarded Ad</button>
+  <button onclick="showPopup()">⚡ Claim via Popup</button>
+  <button onclick="startInAppAds()">📢 Start Auto Ads</button>
+
+  <script>
+    // Telegram WebApp ready check
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+
+    function addReward(points) {
+      let current = parseInt(localStorage.getItem("coins") || "0");
+      localStorage.setItem("coins", current + points);
+      updateUI();
+    }
+
+    function updateUI() {
+      document.getElementById("coins").innerText = localStorage.getItem("coins") || "0";
+    }
+
+    function showRewarded() {
+      show_9153061().then(() => {
+        addReward(10);
+      }).catch(() => {});
+    }
+
+    function showPopup() {
+      show_9153061('pop').then(() => {
+        addReward(5);
+      }).catch(() => {});
+    }
+
+    function startInAppAds() {
+      show_9153061({
+        type: 'inApp',
+        inAppSettings: {
+          frequency: 2,
+          capping: 0.1,
+          interval: 30,
+          timeout: 5,
+          everyPage: false
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
